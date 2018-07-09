@@ -3,7 +3,6 @@ package ru.ezhov.translator.gui;
 import ru.ezhov.translator.translate.Translate;
 import ru.ezhov.translator.translate.TranslateLang;
 import ru.ezhov.translator.util.CompoundIcon;
-import ru.ezhov.translator.util.JTextFieldWithText;
 import ru.ezhov.translator.util.MouseMoveWindowListener;
 
 import javax.swing.*;
@@ -61,11 +60,8 @@ public class Gui {
                 panelTop.add(toggleButton, BorderLayout.EAST);
                 panelTop.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 
-                final JTextField textFieldFrom = new JTextFieldWithText("Введите слово или фразу и нажмите \"ENTER\"");
 
-                final JTextField textFieldTo = new JTextField();
-                textFieldTo.setEditable(false);
-                textFieldTo.setBackground(Color.decode("#D8D8D8"));
+                final TargetPanel targetPanel = new TargetPanel();
 
 
                 final Icon compoundIconEnRu = new CompoundIcon(
@@ -95,8 +91,8 @@ public class Gui {
                     }
                 });
 
-                textFieldFrom.addKeyListener(new KeyAdapter() {
-
+                final SourcePanel sourcePanel = new SourcePanel();
+                sourcePanel.addKeyListener(new KeyAdapter() {
                     @Override
                     public void keyReleased(KeyEvent e) {
                         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -107,24 +103,25 @@ public class Gui {
                                 } else {
                                     translateLang = TranslateLang.EN_RU;
                                 }
-                                String text = textFieldFrom.getText();
+                                String text = sourcePanel.getText();
                                 if (text != null && !"".equals(text)) {
-                                    textFieldTo.setText(translate.translate(translateLang, text.trim()));
+                                    targetPanel.setText(translate.translate(translateLang, text.trim()));
                                 }
                             } catch (Exception ex) {
-                                textFieldTo.setText("Error");
+                                targetPanel.setText("Error");
                                 ex.printStackTrace();
                             }
                         }
                     }
                 });
+
                 GridLayout gridLayout = new GridLayout(2, 1);
                 gridLayout.setVgap(2);
                 final JPanel panelCenter = new JPanel(gridLayout);
                 panelBasic.add(panelCenter, BorderLayout.CENTER);
 
-                panelCenter.add(textFieldFrom);
-                panelCenter.add(textFieldTo);
+                panelCenter.add(sourcePanel);
+                panelCenter.add(targetPanel);
 
                 final String commonLink = "<html>Переведено сервисом «Яндекс.Переводчик»";
                 final String selectLink = "<html><u><font color=\"blue\">Переведено сервисом «Яндекс.Переводчик»</font></u>";
