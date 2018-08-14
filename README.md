@@ -14,7 +14,7 @@
 
 @echo off  
 cd /d %~dp0
-"%JAVA_HOME%\bin\java" "-Dyandex.key=зарегистрированный ключ яндекса используется для работы яндекса переводчика" "-Dyandex.url=https://translate.yandex.net/api/v1.5/tr.json/translate?key=%%s&text=%%s&lang=%%s" -cp "translator-gui.jar;target\translator-engine.jar" "ru.ezhov.translator.gui.App" "ru.ezhov.translator.engine.YandexTranslate"
+"%JAVA_HOME%\bin\java" "-Dyandex.key=зарегистрированный ключ яндекса используется для работы яндекса переводчика" "-Dyandex.url=https://translate.yandex.net/api/v1.5/tr.json/translate?key=%%s&text=%%s&lang=%%s" -cp "translator-gui.jar;translator-engine.jar" "ru.ezhov.translator.gui.App" "ru.ezhov.translator.engine.YandexTranslate"
 
 
 Если Вы обращаетесь через прокси, укажите данные прокси через свойства:  
