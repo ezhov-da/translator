@@ -1,7 +1,9 @@
-package ru.ezhov.translator.translate;
+package ru.ezhov.translator.engine;
 
 import com.google.gson.Gson;
-import ru.ezhov.translator.util.HttpsUtil;
+import ru.ezhov.translator.core.Translate;
+import ru.ezhov.translator.core.TranslateLang;
+import ru.ezhov.translator.core.util.HttpsUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.UnsupportedEncodingException;
@@ -10,21 +12,38 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.Scanner;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Translate {
-    private static final Logger LOG = Logger.getLogger(Translate.class.getName());
+public class YandexTranslate implements Translate {
+    private static final Logger LOG = Logger.getLogger(YandexTranslate.class.getName());
 
+    private String url;
     private String key;
 
-    public Translate(String key) {
-        this.key = key;
+    public YandexTranslate() {
+        this.key = System.getProperty("yandex.key");
+        this.url = System.getProperty("yandex.url");
+        if (this.key == null || this.url == null) {
+            LOG.log(Level.SEVERE,
+                    "Не указаны необходимые ключи при запуске приложения. \n" +
+                            "Для работы Яндекс переводчика необходимо указать параметры:\n {0}\n{1}\n" +
+                            "Более подробно Вы можете ознакомиться на https://translate.yandex.ru/developers/keys",
+                    new Object[]{
+                            "-Dyandex.key - ключ для Яндекс API переводчика", "-Dyandex.url - ссылка на API переводчика"
+                    }
+            );
+        } else {
+            LOG.log(Level.INFO, "Ключ: {0}", key);
+            LOG.log(Level.INFO, "Ссылка: {0}", url);
+        }
     }
 
+    @Override
     public String translate(TranslateLang translateLang, String word) throws Exception {
         HttpsUtil.enableAllTrustingSsl();
         String buildUrl = buildUrl(translateLang, word);
-        System.out.println(buildUrl);
+        LOG.log(Level.INFO, "Построенная ссылка: {0}", buildUrl);
         URL url = new URL(buildUrl);
         HttpsURLConnection https = (HttpsURLConnection) url.openConnection();
         int code = https.getResponseCode();
@@ -64,7 +83,7 @@ public class Translate {
     private String buildUrl(TranslateLang translateLang, String word) throws UnsupportedEncodingException {
         String wordEncode = URLEncoder.encode(word, "UTF-8");
         return String.format(
-                "https://translate.yandex.net/api/v1.5/tr.json/translate?key=%s&text=%s&lang=%s",
+                url,
                 key,
                 wordEncode,
                 translateLang.getLang());

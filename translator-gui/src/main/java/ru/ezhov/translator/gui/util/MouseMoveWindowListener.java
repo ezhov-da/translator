@@ -1,4 +1,4 @@
-package ru.ezhov.translator.util;
+package ru.ezhov.translator.gui.util;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;

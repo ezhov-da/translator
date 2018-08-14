@@ -1,4 +1,4 @@
-package ru.ezhov.translator.util;
+package ru.ezhov.translator.gui.util;
 
 import javax.swing.*;
 import java.awt.*;

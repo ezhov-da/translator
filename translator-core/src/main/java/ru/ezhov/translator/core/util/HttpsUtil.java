@@ -1,4 +1,4 @@
-package ru.ezhov.translator.util;
+package ru.ezhov.translator.core.util;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;

@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package ru.ezhov.translator.util;
+package ru.ezhov.translator.core.util;
 
 import javax.swing.*;
 import java.awt.*;
