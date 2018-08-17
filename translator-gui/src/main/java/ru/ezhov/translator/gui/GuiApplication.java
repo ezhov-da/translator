@@ -4,16 +4,17 @@ import ru.ezhov.translator.core.Translate;
 import ru.ezhov.translator.core.TranslateLang;
 import ru.ezhov.translator.gui.util.CompoundIcon;
 import ru.ezhov.translator.gui.util.MouseMoveWindowListener;
+import ru.ezhov.translator.gui.util.version.VersionInfo;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.net.URI;
 
-public class Gui {
+public class GuiApplication {
     private Translate translate;
 
-    public Gui(Translate translate) {
+    public GuiApplication(Translate translate) {
         this.translate = translate;
     }
 
@@ -37,7 +38,7 @@ public class Gui {
 
                 JPanel panelTop = new JPanel(new BorderLayout());
                 panelBasic.add(panelTop, BorderLayout.NORTH);
-                final JLabel labelTitle = new JLabel("<html><b>Переводчик</b>");
+                final JLabel labelTitle = new JLabel("<html><b>Переводчик</b> <font size=\"3\"><sup>v." + VersionInfo.version() + "<sup></font>");
                 MouseMoveWindowListener mouseMoveWindowListener = new MouseMoveWindowListener(frame);
                 labelTitle.addMouseListener(mouseMoveWindowListener);
                 labelTitle.addMouseMotionListener(mouseMoveWindowListener);
@@ -54,22 +55,29 @@ public class Gui {
 
                 });
                 panelTop.add(labelTitle, BorderLayout.CENTER);
+
+                JPanel panelEast = new JPanel();
+                final JCheckBox checkBoxAutoChange = new JCheckBox();
+                checkBoxAutoChange.setSelected(true);
+                checkBoxAutoChange.setToolTipText("<html>Выберите для автоматического переключения языка в момент ввода");
                 final JToggleButton toggleButton = new JToggleButton();
-                panelTop.add(toggleButton, BorderLayout.EAST);
+                panelEast.add(checkBoxAutoChange);
+                panelEast.add(toggleButton);
+                panelTop.add(panelEast, BorderLayout.EAST);
                 panelTop.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
 
                 final TargetPanel targetPanel = new TargetPanel();
 
                 final Icon compoundIconEnRu = new CompoundIcon(
-                        new ImageIcon(Gui.class.getResource("/flag-english_16x16.png")),
-                        new ImageIcon(Gui.class.getResource("/arrow_16x16.png")),
-                        new ImageIcon(Gui.class.getResource("/flag-russia_16x16.png"))
+                        new ImageIcon(GuiApplication.class.getResource("/flag-english_16x16.png")),
+                        new ImageIcon(GuiApplication.class.getResource("/arrow_16x16.png")),
+                        new ImageIcon(GuiApplication.class.getResource("/flag-russia_16x16.png"))
                 );
 
                 final Icon compoundIconRuEn = new CompoundIcon(
-                        new ImageIcon(Gui.class.getResource("/flag-russia_16x16.png")),
-                        new ImageIcon(Gui.class.getResource("/arrow_16x16.png")),
-                        new ImageIcon(Gui.class.getResource("/flag-english_16x16.png"))
+                        new ImageIcon(GuiApplication.class.getResource("/flag-russia_16x16.png")),
+                        new ImageIcon(GuiApplication.class.getResource("/arrow_16x16.png")),
+                        new ImageIcon(GuiApplication.class.getResource("/flag-english_16x16.png"))
                 );
 
                 final ActionListener toggleButtonActionListener = new ActionListener() {
@@ -115,6 +123,19 @@ public class Gui {
                         } else if (e.getKeyCode() == KeyEvent.VK_W && e.isControlDown()) {
                             toggleButton.setSelected(!toggleButton.isSelected());
                             toggleButtonActionListener.actionPerformed(null);
+                        } else {
+                            if (checkBoxAutoChange.isSelected()) {
+                                String text = sourcePanel.getText();
+                                if (text != null && !"".equals(text)) {
+                                    boolean matches = text.matches(".*[А-Яа-я].*");
+                                    if (matches) {
+                                        toggleButton.setSelected(true);
+                                    } else {
+                                        toggleButton.setSelected(false);
+                                    }
+                                    toggleButtonActionListener.actionPerformed(null);
+                                }
+                            }
                         }
                     }
                 });

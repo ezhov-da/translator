@@ -4,9 +4,7 @@ import ru.ezhov.translator.core.util.JTextFieldWithText;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 
 class SourcePanel extends JPanel {
     private final JTextField textFieldFrom;
@@ -30,6 +28,15 @@ class SourcePanel extends JPanel {
         });
         buttonClean.setToolTipText("Очистить поле (достаточно навести на кнопку)");
         Dimension dimension = new Dimension(25, 25);
+        textFieldFrom.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                String text = textFieldFrom.getText();
+                if (text != null && !"".equals(text)) {
+                    textFieldFrom.select(0, text.length());
+                }
+            }
+        });
         buttonClean.setPreferredSize(dimension);
         add(textFieldFrom, BorderLayout.CENTER);
         add(buttonClean, BorderLayout.EAST);
