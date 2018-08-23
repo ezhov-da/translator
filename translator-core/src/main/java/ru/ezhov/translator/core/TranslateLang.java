@@ -9,6 +9,15 @@ public enum TranslateLang {
         this.lang = lang;
     }
 
+    public static TranslateLang from(String lang) {
+        for (TranslateLang translateLang : TranslateLang.values()) {
+            if (translateLang.lang.equals(lang)) {
+                return translateLang;
+            }
+        }
+        return null;
+    }
+
     public String getLang() {
         return lang;
     }
