@@ -12,6 +12,7 @@
         <module>translator-core</module>
         <module>translator-gui</module>
         <module>translator-engine</module>
+        <module>translator-web</module>
     </modules>
 
     <name>translator</name>
