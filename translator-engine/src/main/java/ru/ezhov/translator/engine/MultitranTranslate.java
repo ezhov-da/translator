@@ -8,6 +8,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import ru.ezhov.translator.core.Translate;
 import ru.ezhov.translator.core.TranslateLang;
+import ru.ezhov.translator.core.TranslateResult;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -28,13 +29,15 @@ public class MultitranTranslate implements Translate {
     }
 
     @Override
-    public String translate(TranslateLang translateLang, String word) throws Exception {
+    public TranslateResult translate(TranslateLang translateLang, String word) throws Exception {
         Get get = Http.get(buildUrl(word));
         String text = get.text("cp1251");
         Document document = Jsoup.parse(text);
         Elements elements = document.getElementsByTag("table");
         Element element = elements.get(9);
         Elements trs = element.getElementsByTag("tr");
+        String resultText = "Ошибка работы";
+        markReturn:
         for (int trCounter = 1; trCounter < trs.size(); trCounter++) {
             Element tr = trs.get(trCounter);
             Elements tds = tr.getElementsByTag("td");
@@ -47,12 +50,13 @@ public class MultitranTranslate implements Translate {
                     String translate = getTranslate(tdTranslate);
                     LOG.log(Level.FINEST, "Перевод: {0}", tdTranslate);
                     if ("Общая лексика".equals(description)) {
-                        return translate;
+                        resultText = translate;
+                        break markReturn;
                     }
                 }
             }
         }
-        return "Ошибка работы";
+        return new TranslateResult(resultText, "Переведено с помощью Мультитран");
     }
 
     private String buildUrl(String text) throws UnsupportedEncodingException {

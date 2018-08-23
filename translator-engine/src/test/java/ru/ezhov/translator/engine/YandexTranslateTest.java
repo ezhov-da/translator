@@ -3,6 +3,7 @@ package ru.ezhov.translator.engine;
 import org.junit.Ignore;
 import org.junit.Test;
 import ru.ezhov.translator.core.TranslateLang;
+import ru.ezhov.translator.core.TranslateResult;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,8 +12,8 @@ public class YandexTranslateTest {
     @Test
     public void translate() throws Exception {
         YandexTranslate yandexTranslate = new YandexTranslate();
-        String text = yandexTranslate.translate(TranslateLang.EN_RU, "test");
-        assertEquals("тест", text);
+        TranslateResult translateResult = yandexTranslate.translate(TranslateLang.EN_RU, "test");
+        assertEquals("тест", translateResult.getText());
     }
 
 }

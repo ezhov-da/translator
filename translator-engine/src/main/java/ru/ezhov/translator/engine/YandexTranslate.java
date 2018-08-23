@@ -3,6 +3,7 @@ package ru.ezhov.translator.engine;
 import com.google.gson.Gson;
 import ru.ezhov.translator.core.Translate;
 import ru.ezhov.translator.core.TranslateLang;
+import ru.ezhov.translator.core.TranslateResult;
 import ru.ezhov.translator.core.util.HttpsUtil;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -40,13 +41,15 @@ public class YandexTranslate implements Translate {
     }
 
     @Override
-    public String translate(TranslateLang translateLang, String word) throws Exception {
+    public TranslateResult translate(TranslateLang translateLang, String word) throws Exception {
+        final String link = "Переведено сервисом «Яндекс.Переводчик» http://translate.yandex.ru/";
         HttpsUtil.enableAllTrustingSsl();
         String buildUrl = buildUrl(translateLang, word);
         LOG.log(Level.INFO, "Построенная ссылка: {0}", buildUrl);
         URL url = new URL(buildUrl);
         HttpsURLConnection https = (HttpsURLConnection) url.openConnection();
         int code = https.getResponseCode();
+        String resultText;
         switch (code) {
             case HttpURLConnection.HTTP_OK:
                 try (Scanner scanner = new Scanner(https.getInputStream(), "UTF-8")) {
@@ -54,11 +57,12 @@ public class YandexTranslate implements Translate {
                         String text = scanner.nextLine();
                         Gson gson = new Gson();
                         AnswerOk answerOk = gson.fromJson(text, AnswerOk.class);
-                        return answerOk.getText().get(0);
+                        resultText = answerOk.getText().get(0);
                     } else {
-                        return "";
+                        resultText = "";
                     }
                 }
+                break;
             case 401:
             case 402:
             case 404:
@@ -70,14 +74,16 @@ public class YandexTranslate implements Translate {
                         String text = scanner.nextLine();
                         Gson gson = new Gson();
                         AnswerError answerOk = gson.fromJson(text, AnswerError.class);
-                        return answerOk.getMessage();
+                        resultText = answerOk.getMessage();
                     } else {
-                        return "Error";
+                        resultText = "Error";
                     }
                 }
+                break;
             default:
-                return "Error";
+                resultText = "Error";
         }
+        return new TranslateResult(resultText, link);
     }
 
     private String buildUrl(TranslateLang translateLang, String word) throws UnsupportedEncodingException {
