@@ -1,13 +1,13 @@
 package ru.ezhov.translator.gui;
 
-import ru.ezhov.translator.core.Translate;
+import ru.ezhov.translator.gui.translate.RestTranslate;
 import ru.ezhov.translator.gui.util.version.Version;
 
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-@Version("0.1")
+@Version("0.2")
 public class App {
     private static final Logger LOG = Logger.getLogger(App.class.getName());
 
@@ -21,13 +21,10 @@ public class App {
 
     public static void main(String[] args) {
         if (args.length == 0) {
-            throw new IllegalArgumentException("Входной параметр реализация класса переводчика");
+            throw new IllegalArgumentException("Входной параметр URL переводчика");
         } else {
-            String clazzNameTranslate = args[0];
             try {
-                Class translateClass = Class.forName(clazzNameTranslate);
-                Translate translate = (Translate) translateClass.newInstance();
-                GuiApplication guiApplication = new GuiApplication(translate);
+                GuiApplication guiApplication = new GuiApplication(new RestTranslate(args[0]));
                 guiApplication.run();
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Ошибка при запуске приложения", e);

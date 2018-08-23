@@ -37,5 +37,6 @@ public class TargetPanel extends JPanel {
 
     public void setText(String text) {
         textFieldTo.setText(text);
+        textFieldTo.setCaretPosition(0);
     }
 }

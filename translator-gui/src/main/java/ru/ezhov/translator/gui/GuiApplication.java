@@ -1,7 +1,8 @@
 package ru.ezhov.translator.gui;
 
-import ru.ezhov.translator.core.Translate;
 import ru.ezhov.translator.core.TranslateLang;
+import ru.ezhov.translator.core.TranslateResult;
+import ru.ezhov.translator.gui.translate.RestTranslate;
 import ru.ezhov.translator.gui.util.CompoundIcon;
 import ru.ezhov.translator.gui.util.MouseMoveWindowListener;
 import ru.ezhov.translator.gui.util.version.VersionInfo;
@@ -9,13 +10,13 @@ import ru.ezhov.translator.gui.util.version.VersionInfo;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.net.URI;
 
 public class GuiApplication {
-    private Translate translate;
 
-    public GuiApplication(Translate translate) {
-        this.translate = translate;
+    private RestTranslate translate;
+
+    public GuiApplication(RestTranslate restTranslate) {
+        this.translate = restTranslate;
     }
 
     public void run() {
@@ -54,7 +55,7 @@ public class GuiApplication {
                     }
 
                 });
-                panelTop.add(labelTitle, BorderLayout.CENTER);
+                panelTop.add(labelTitle, BorderLayout.WEST);
 
                 JPanel panelEast = new JPanel();
                 final JCheckBox checkBoxAutoChange = new JCheckBox();
@@ -65,6 +66,17 @@ public class GuiApplication {
                 panelEast.add(toggleButton);
                 panelTop.add(panelEast, BorderLayout.EAST);
                 panelTop.setBorder(BorderFactory.createEmptyBorder(0, 0, 2, 0));
+
+                final JRadioButton radioButtonYandex = new JRadioButton("Яндекс");
+                JRadioButton radioButtonMultitran = new JRadioButton("Мультитран");
+                radioButtonYandex.setSelected(true);
+                ButtonGroup buttonGroup = new ButtonGroup();
+                buttonGroup.add(radioButtonYandex);
+                buttonGroup.add(radioButtonMultitran);
+                JPanel panelRadioButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
+                panelRadioButton.add(radioButtonYandex);
+                panelRadioButton.add(radioButtonMultitran);
+                panelTop.add(panelRadioButton, BorderLayout.CENTER);
 
                 final TargetPanel targetPanel = new TargetPanel();
 
@@ -98,6 +110,8 @@ public class GuiApplication {
                 toggleButton.setIcon(compoundIconEnRu);
                 toggleButton.addActionListener(toggleButtonActionListener);
 
+                final JLabel labelLink = new JLabel();
+
                 final SourcePanel sourcePanel = new SourcePanel();
                 sourcePanel.addKeyListener(new KeyAdapter() {
                     @Override
@@ -112,7 +126,16 @@ public class GuiApplication {
                                 }
                                 String text = sourcePanel.getText();
                                 if (text != null && !"".equals(text)) {
-                                    targetPanel.setText(translate.translate(translateLang, text.trim()));
+                                    //TODO: перевод вынести в отдельный интерфейс, который не будет зависеть от core
+                                    RestTranslate.Engine engine;
+                                    if (radioButtonYandex.isSelected()) {
+                                        engine = RestTranslate.Engine.YANDEX;
+                                    } else {
+                                        engine = RestTranslate.Engine.MULTITRAN;
+                                    }
+                                    TranslateResult translateResult = translate.translate(engine, translateLang, text.trim());
+                                    targetPanel.setText(translateResult.getText());
+                                    labelLink.setText(translateResult.getAdditionalInformation());
                                 }
                             } catch (Exception ex) {
                                 targetPanel.setText("Error");
@@ -148,39 +171,8 @@ public class GuiApplication {
                 panelCenter.add(sourcePanel);
                 panelCenter.add(targetPanel);
 
-                final String commonLink = "<html>Переведено сервисом «Яндекс.Переводчик»";
-                final String selectLink = "<html><u><font color=\"blue\">Переведено сервисом «Яндекс.Переводчик»</font></u>";
-                final String link = "http://translate.yandex.ru/";
-                final JLabel labelLink = new JLabel(commonLink);
+
                 labelLink.setHorizontalAlignment(SwingConstants.CENTER);
-                labelLink.setToolTipText("Нажмите для перехода на: " + link);
-                labelLink.addMouseListener(new MouseAdapter() {
-                    @Override
-                    public void mouseEntered(MouseEvent e) {
-                        labelLink.setText(selectLink);
-                        labelLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
-                    }
-
-                    @Override
-                    public void mouseExited(MouseEvent e) {
-                        labelLink.setText(commonLink);
-                        labelLink.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-                    }
-
-                    @Override
-                    public void mouseClicked(MouseEvent e) {
-                        try {
-                            Desktop.getDesktop().browse(new URI(link));
-                        } catch (Exception e1) {
-                            e1.printStackTrace();
-                            JOptionPane.showMessageDialog(
-                                    frame,
-                                    "Ошибка перехода по ссылке",
-                                    "Ошибка перехода по ссылке: " + link,
-                                    JOptionPane.INFORMATION_MESSAGE);
-                        }
-                    }
-                });
                 JPanel panelBottom = new JPanel(new BorderLayout());
                 panelBottom.setBorder(BorderFactory.createEmptyBorder(2, 0, 0, 0));
                 panelBottom.add(labelLink, BorderLayout.CENTER);
@@ -218,7 +210,7 @@ public class GuiApplication {
                 frame.add(panelBasic);
                 frame.setAlwaysOnTop(true);
                 frame.pack();
-                frame.setSize(frame.getWidth() + 100, frame.getHeight());
+//                frame.setSize(frame.getWidth(), frame.getHeight());
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
             }
