@@ -1,10 +1,12 @@
 package ru.ezhov.translator.web.service;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+@Named
 @ApplicationScoped
 public class PropertiesService {
     private static final Logger LOG = Logger.getLogger(PropertiesService.class.getName());

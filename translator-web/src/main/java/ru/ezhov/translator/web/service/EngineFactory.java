@@ -5,7 +5,9 @@ import ru.ezhov.translator.engine.MultitranTranslate;
 import ru.ezhov.translator.engine.YandexTranslate;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
+@Named
 @ApplicationScoped
 public class EngineFactory {
 
