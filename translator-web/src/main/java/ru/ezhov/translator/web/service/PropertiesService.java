@@ -1,17 +1,17 @@
 package ru.ezhov.translator.web.service;
 
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
+import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-@Named
-@ApplicationScoped
+@Singleton
 public class PropertiesService {
     private static final Logger LOG = Logger.getLogger(PropertiesService.class.getName());
 
-    public PropertiesService() throws Exception {
+    @PostConstruct
+    public void initSystemProperties() throws Exception {
         Properties properties = new Properties();
         properties.load(PropertiesService.class.getResourceAsStream("/server.properties"));
         LOG.info("Загрузка настроек приложения");

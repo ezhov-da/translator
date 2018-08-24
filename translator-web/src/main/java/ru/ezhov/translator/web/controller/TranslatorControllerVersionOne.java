@@ -4,7 +4,6 @@ import ru.ezhov.translator.core.TranslateLang;
 import ru.ezhov.translator.core.TranslateResult;
 import ru.ezhov.translator.web.service.Engine;
 import ru.ezhov.translator.web.service.EngineFactory;
-import ru.ezhov.translator.web.service.PropertiesService;
 
 import javax.inject.Inject;
 import javax.ws.rs.GET;
@@ -18,9 +17,6 @@ import javax.ws.rs.core.Response;
 public class TranslatorControllerVersionOne {
     @Inject
     private EngineFactory engineFactory;
-
-    @Inject
-    private PropertiesService propertiesService;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
