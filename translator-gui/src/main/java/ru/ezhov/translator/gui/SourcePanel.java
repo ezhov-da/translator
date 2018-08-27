@@ -1,4 +1,5 @@
 package ru.ezhov.translator.gui;
+
 import ru.ezhov.translator.gui.util.JTextFieldWithText;
 
 import javax.swing.*;
