@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-@Version("0.3")
+@Version("0.4")
 public class App {
     private static final Logger LOG = Logger.getLogger(App.class.getName());
 

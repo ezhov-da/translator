@@ -117,62 +117,13 @@ public class GuiApplication {
                     @Override
                     public void keyReleased(KeyEvent e) {
                         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                            try {
-                                TranslateLang translateLang;
-                                if (toggleButton.isSelected()) {
-                                    translateLang = TranslateLang.RU_EN;
-                                } else {
-                                    translateLang = TranslateLang.EN_RU;
-                                }
-                                String text = sourcePanel.getText();
-                                if (text != null && !"".equals(text)) {
-                                    Engine engine;
-                                    if (radioButtonYandex.isSelected()) {
-                                        engine = Engine.YANDEX;
-                                    } else {
-                                        engine = Engine.MULTITRAN;
-                                    }
-                                    SwingUtilities.invokeLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            labelLink.setText("Получение перевода...");
-                                        }
-                                    });
-                                    Thread thread = new Thread(new TranslateWorker(
-                                            new OutputResult() {
-                                                @Override
-                                                public void setText(final String text) {
-                                                    SwingUtilities.invokeLater(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            targetPanel.setText(text);
-                                                        }
-                                                    });
-                                                }
-                                            },
-                                            new OutputResult() {
-                                                @Override
-                                                public void setText(final String text) {
-                                                    SwingUtilities.invokeLater(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            labelLink.setText(text);
-                                                        }
-                                                    });
-                                                }
-                                            },
-                                            translate,
-                                            engine,
-                                            translateLang,
-                                            text
-                                    ));
-                                    thread.setDaemon(true);
-                                    thread.start();
-                                }
-                            } catch (Exception ex) {
-                                targetPanel.setText("Error");
-                                ex.printStackTrace();
-                            }
+                            actionTranslate(
+                                    toggleButton,
+                                    sourcePanel,
+                                    targetPanel,
+                                    radioButtonYandex,
+                                    labelLink
+                            );
                         } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                             sourcePanel.clearText();
                         } else if (e.getKeyCode() == KeyEvent.VK_W && e.isControlDown()) {
@@ -203,6 +154,21 @@ public class GuiApplication {
                 panelCenter.add(sourcePanel);
                 panelCenter.add(targetPanel);
 
+                ActionListener actionListenerRadioButton = new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        actionTranslate(
+                                toggleButton,
+                                sourcePanel,
+                                targetPanel,
+                                radioButtonYandex,
+                                labelLink
+                        );
+                    }
+                };
+
+                radioButtonYandex.addActionListener(actionListenerRadioButton);
+                radioButtonMultitran.addActionListener(actionListenerRadioButton);
 
                 labelLink.setHorizontalAlignment(SwingConstants.CENTER);
                 JPanel panelBottom = new JPanel(new BorderLayout());
@@ -247,5 +213,70 @@ public class GuiApplication {
                 frame.setVisible(true);
             }
         });
+    }
+
+    private void actionTranslate(
+            JToggleButton langButton,
+            SourcePanel sourcePanel,
+            final TargetPanel targetPanel,
+            JRadioButton radioButtonYandex,
+            final JLabel labelInfo
+    ) {
+        try {
+            TranslateLang translateLang;
+            if (langButton.isSelected()) {
+                translateLang = TranslateLang.RU_EN;
+            } else {
+                translateLang = TranslateLang.EN_RU;
+            }
+            String text = sourcePanel.getText();
+            if (text != null && !"".equals(text)) {
+                Engine engine;
+                if (radioButtonYandex.isSelected()) {
+                    engine = Engine.YANDEX;
+                } else {
+                    engine = Engine.MULTITRAN;
+                }
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        labelInfo.setText("Получение перевода...");
+                    }
+                });
+                Thread thread = new Thread(new TranslateWorker(
+                        new OutputResult() {
+                            @Override
+                            public void setText(final String text) {
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        targetPanel.setText(text);
+                                    }
+                                });
+                            }
+                        },
+                        new OutputResult() {
+                            @Override
+                            public void setText(final String text) {
+                                SwingUtilities.invokeLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        labelInfo.setText(text);
+                                    }
+                                });
+                            }
+                        },
+                        translate,
+                        engine,
+                        translateLang,
+                        text
+                ));
+                thread.setDaemon(true);
+                thread.start();
+            }
+        } catch (Exception ex) {
+            targetPanel.setText("Error");
+            ex.printStackTrace();
+        }
     }
 }
