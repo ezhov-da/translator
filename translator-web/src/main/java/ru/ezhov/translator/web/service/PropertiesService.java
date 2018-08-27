@@ -1,16 +1,22 @@
 package ru.ezhov.translator.web.service;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Singleton;
+import javax.enterprise.context.ApplicationScoped;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-@Singleton
+@ApplicationScoped
 public class PropertiesService {
     private static final Logger LOG = Logger.getLogger(PropertiesService.class.getName());
 
-    @PostConstruct
+    public PropertiesService() {
+        try {
+            initSystemProperties();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void initSystemProperties() throws Exception {
         Properties properties = new Properties();
         properties.load(PropertiesService.class.getResourceAsStream("/server.properties"));
