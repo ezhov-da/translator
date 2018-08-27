@@ -1,6 +1,6 @@
 package ru.ezhov.translator.gui;
 
-import ru.ezhov.translator.gui.translate.RestTranslate;
+import ru.ezhov.translator.gui.translate.RemoteTranslate;
 import ru.ezhov.translator.gui.util.version.Version;
 
 import java.util.logging.Level;
@@ -24,7 +24,7 @@ public class App {
             throw new IllegalArgumentException("Входной параметр URL переводчика");
         } else {
             try {
-                GuiApplication guiApplication = new GuiApplication(new RestTranslate(args[0]));
+                GuiApplication guiApplication = new GuiApplication(new RemoteTranslate(args[0]));
                 guiApplication.run();
             } catch (Exception e) {
                 LOG.log(Level.SEVERE, "Ошибка при запуске приложения", e);

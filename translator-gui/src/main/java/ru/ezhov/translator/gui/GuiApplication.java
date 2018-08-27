@@ -2,7 +2,7 @@ package ru.ezhov.translator.gui;
 
 import ru.ezhov.translator.core.TranslateLang;
 import ru.ezhov.translator.core.TranslateResult;
-import ru.ezhov.translator.gui.translate.RestTranslate;
+import ru.ezhov.translator.gui.translate.RemoteTranslate;
 import ru.ezhov.translator.gui.util.CompoundIcon;
 import ru.ezhov.translator.gui.util.MouseMoveWindowListener;
 import ru.ezhov.translator.gui.util.version.VersionInfo;
@@ -13,10 +13,10 @@ import java.awt.event.*;
 
 public class GuiApplication {
 
-    private RestTranslate translate;
+    private RemoteTranslate translate;
 
-    public GuiApplication(RestTranslate restTranslate) {
-        this.translate = restTranslate;
+    public GuiApplication(RemoteTranslate remoteTranslate) {
+        this.translate = remoteTranslate;
     }
 
     public void run() {
@@ -127,11 +127,11 @@ public class GuiApplication {
                                 String text = sourcePanel.getText();
                                 if (text != null && !"".equals(text)) {
                                     //TODO: перевод вынести в отдельный интерфейс, который не будет зависеть от core
-                                    RestTranslate.Engine engine;
+                                    RemoteTranslate.Engine engine;
                                     if (radioButtonYandex.isSelected()) {
-                                        engine = RestTranslate.Engine.YANDEX;
+                                        engine = RemoteTranslate.Engine.YANDEX;
                                     } else {
-                                        engine = RestTranslate.Engine.MULTITRAN;
+                                        engine = RemoteTranslate.Engine.MULTITRAN;
                                     }
                                     TranslateResult translateResult = translate.translate(engine, translateLang, text.trim());
                                     targetPanel.setText(translateResult.getText());

@@ -8,25 +8,30 @@ import ru.ezhov.translator.core.TranslateResult;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class RestTranslate {
+public class RemoteTranslate {
     public enum Engine {YANDEX, MULTITRAN}
 
     private String url;
     private Engine engine;
 
-    public RestTranslate(String url) {
+    public RemoteTranslate(String url) {
         this.url = url;
     }
 
+    private static final Logger LOG = Logger.getLogger(RemoteTranslate.class.getName());
+
     public TranslateResult translate(Engine engine, TranslateLang translateLang, String word) throws Exception {
-        Get get = Http.get(buildUrl(engine, translateLang, word));
+        Get get = Http.get(buildUrl(engine, translateLang, word), 60000, 60000);
         if (get.responseCode() == 200) {
             Gson gson = new Gson();
             Answer answer = gson.fromJson(get.text(), Answer.class);
             return new TranslateResult(answer.getText(), answer.getInfo());
         } else {
-            return new TranslateResult("Ошибка", "Не удалось получить ответ от сервера");
+            LOG.log(Level.SEVERE, "Получен код ответа от сервера:  " + get.responseCode(), get.text());
+            return new TranslateResult("-", get.text());
         }
     }
 
