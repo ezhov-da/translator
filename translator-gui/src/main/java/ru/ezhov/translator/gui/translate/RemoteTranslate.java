@@ -3,17 +3,13 @@ package ru.ezhov.translator.gui.translate;
 import com.google.gson.Gson;
 import org.javalite.http.Get;
 import org.javalite.http.Http;
-import ru.ezhov.translator.core.TranslateLang;
-import ru.ezhov.translator.core.TranslateResult;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class RemoteTranslate {
-    public enum Engine {YANDEX, MULTITRAN}
-
+public class RemoteTranslate implements Translate {
     private String url;
     private Engine engine;
 
@@ -23,6 +19,7 @@ public class RemoteTranslate {
 
     private static final Logger LOG = Logger.getLogger(RemoteTranslate.class.getName());
 
+    @Override
     public TranslateResult translate(Engine engine, TranslateLang translateLang, String word) throws Exception {
         Get get = Http.get(buildUrl(engine, translateLang, word), 60000, 60000);
         if (get.responseCode() == 200) {

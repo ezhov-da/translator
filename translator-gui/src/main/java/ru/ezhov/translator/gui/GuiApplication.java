@@ -1,8 +1,8 @@
 package ru.ezhov.translator.gui;
 
-import ru.ezhov.translator.core.TranslateLang;
-import ru.ezhov.translator.core.TranslateResult;
+import ru.ezhov.translator.gui.translate.Engine;
 import ru.ezhov.translator.gui.translate.RemoteTranslate;
+import ru.ezhov.translator.gui.translate.TranslateLang;
 import ru.ezhov.translator.gui.util.CompoundIcon;
 import ru.ezhov.translator.gui.util.MouseMoveWindowListener;
 import ru.ezhov.translator.gui.util.version.VersionInfo;
@@ -126,16 +126,48 @@ public class GuiApplication {
                                 }
                                 String text = sourcePanel.getText();
                                 if (text != null && !"".equals(text)) {
-                                    //TODO: перевод вынести в отдельный интерфейс, который не будет зависеть от core
-                                    RemoteTranslate.Engine engine;
+                                    Engine engine;
                                     if (radioButtonYandex.isSelected()) {
-                                        engine = RemoteTranslate.Engine.YANDEX;
+                                        engine = Engine.YANDEX;
                                     } else {
-                                        engine = RemoteTranslate.Engine.MULTITRAN;
+                                        engine = Engine.MULTITRAN;
                                     }
-                                    TranslateResult translateResult = translate.translate(engine, translateLang, text.trim());
-                                    targetPanel.setText(translateResult.getText());
-                                    labelLink.setText(translateResult.getAdditionalInformation());
+                                    SwingUtilities.invokeLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            labelLink.setText("Получение перевода...");
+                                        }
+                                    });
+                                    Thread thread = new Thread(new TranslateWorker(
+                                            new OutputResult() {
+                                                @Override
+                                                public void setText(final String text) {
+                                                    SwingUtilities.invokeLater(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            targetPanel.setText(text);
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            new OutputResult() {
+                                                @Override
+                                                public void setText(final String text) {
+                                                    SwingUtilities.invokeLater(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            labelLink.setText(text);
+                                                        }
+                                                    });
+                                                }
+                                            },
+                                            translate,
+                                            engine,
+                                            translateLang,
+                                            text
+                                    ));
+                                    thread.setDaemon(true);
+                                    thread.start();
                                 }
                             } catch (Exception ex) {
                                 targetPanel.setText("Error");

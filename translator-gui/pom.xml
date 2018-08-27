@@ -26,11 +26,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>ru.ezhov</groupId>
-            <artifactId>translator-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.javalite/javalite-common -->
         <dependency>
             <groupId>org.javalite</groupId>
