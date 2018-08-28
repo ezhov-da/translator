@@ -3,3 +3,4 @@
 target
 run-gui-with-key.bat
 server.properties
+/translator-web/src/main/resources/server.properties
