@@ -5,7 +5,7 @@
     <parent>
         <artifactId>translator</artifactId>
         <groupId>ru.ezhov</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>2.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,8 +13,6 @@
     <packaging>war</packaging>
 
     <name>translator-web Maven Webapp</name>
-    <!-- FIXME change it to the project's website -->
-    <url>http://www.example.com</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,12 +37,12 @@
         <dependency>
             <groupId>ru.ezhov</groupId>
             <artifactId>translator-core</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ru.ezhov</groupId>
             <artifactId>translator-engine</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>2.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
