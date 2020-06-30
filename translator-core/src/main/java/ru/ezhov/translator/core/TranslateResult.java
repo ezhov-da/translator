@@ -1,8 +1,8 @@
 package ru.ezhov.translator.core;
 
 public class TranslateResult {
-    private String text;
-    private String additionalInformation;
+    private final String text;
+    private final String additionalInformation;
 
     public TranslateResult(String text, String additionalInformation) {
         this.text = text;

@@ -10,7 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RemoteTranslate implements Translate {
-    private String url;
+    private final String url;
     private Engine engine;
 
     public RemoteTranslate(String url) {
@@ -41,7 +41,7 @@ public class RemoteTranslate implements Translate {
         );
     }
 
-    private class Answer {
+    private static class Answer {
         private String text;
         private String info;
 

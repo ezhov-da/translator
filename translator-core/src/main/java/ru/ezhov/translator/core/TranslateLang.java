@@ -3,7 +3,7 @@ package ru.ezhov.translator.core;
 public enum TranslateLang {
     RU_EN("ru-en"), EN_RU("en-ru");
 
-    private String lang;
+    private final String lang;
 
     TranslateLang(String lang) {
         this.lang = lang;

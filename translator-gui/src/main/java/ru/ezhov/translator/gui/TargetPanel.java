@@ -1,7 +1,12 @@
 package ru.ezhov.translator.gui;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
@@ -15,7 +20,6 @@ public class TargetPanel extends JPanel {
         setLayout(new BorderLayout());
         textFieldTo = new JTextField();
         textFieldTo.setEditable(false);
-        textFieldTo.setBackground(Color.decode("#D8D8D8"));
         buttonCopy = new JButton(new ImageIcon(getClass().getResource("/copy_16x16.png")));
         buttonCopy.setToolTipText("Копировать в буффер результат перевода");
         Dimension dimension = new Dimension(25, 25);

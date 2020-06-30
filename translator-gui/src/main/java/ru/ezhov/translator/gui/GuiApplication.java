@@ -147,7 +147,7 @@ public class GuiApplication {
         buttonGroup.add(radioButtonMultitran);
         JPanel panelRadioButton = new JPanel(new FlowLayout(FlowLayout.CENTER));
         panelRadioButton.add(radioButtonYandex);
-        panelRadioButton.add(radioButtonMultitran);
+//        panelRadioButton.add(radioButtonMultitran);
         panelTop.add(panelRadioButton, BorderLayout.CENTER);
 
         final TargetPanel targetPanel = new TargetPanel();

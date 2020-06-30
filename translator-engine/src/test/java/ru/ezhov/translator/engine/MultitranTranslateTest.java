@@ -1,11 +1,12 @@
 package ru.ezhov.translator.engine;
 
+import static org.junit.Assert.assertNotEquals;
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.ezhov.translator.core.Translate;
 import ru.ezhov.translator.core.TranslateLang;
 
-import static org.junit.Assert.assertNotEquals;
-
+@Ignore
 public class MultitranTranslateTest {
     @Test
     public void translateRuEnOk() throws Exception {

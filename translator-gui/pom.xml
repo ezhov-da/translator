@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>translator-gui</artifactId>
+    <version>0.0.4</version>
 
     <name>translator-gui</name>
 
@@ -50,7 +51,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>ru.ezhov.translator.core.App</mainClass>
+                            <mainClass>ru.ezhov.translator.gui.App</mainClass>
                         </manifest>
                     </archive>
                     <finalName>${project.artifactId}</finalName>
